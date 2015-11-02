@@ -37,12 +37,6 @@ include $(CLEAR_VARS)
 
 BUSYBOX_CROSS_COMPILER_PREFIX := $(abspath $(TARGET_TOOLS_PREFIX))
 
-BB_PREPARE_FLAGS:=
-ifeq ($(HOST_OS),darwin)
-    BB_HOSTCC := $(ANDROID_BUILD_TOP)/prebuilts/gcc/darwin-x86/host/i686-apple-darwin-4.2.1/bin/i686-apple-darwin11-gcc
-    BB_PREPARE_FLAGS := HOSTCC=$(BB_HOSTCC)
-endif
-
 #####################################################################
 
 KERNEL_MODULES_DIR ?= /system/lib/modules
@@ -112,7 +106,7 @@ $(busybox_autoconf_minimal_h): $(BB_PATH)/busybox-minimal.config
 	@rm -rf $(dir $($D)) $(local-intermediates-dir)
 	@mkdir -p $(@D)
 	$(hide) ( cat $^ && echo "CONFIG_CROSS_COMPILER_PREFIX=\"$(BUSYBOX_CROSS_COMPILER_PREFIX)\"" ) > $(dir $($D)).config
-	make -C $(BB_PATH) prepare O=$(abspath $(dir $(@D))) $(BB_PREPARE_FLAGS)
+	make -C $(BB_PATH) prepare O=$(abspath $(dir $(@D)))
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -140,7 +134,7 @@ $(busybox_autoconf_full_h): $(BB_PATH)/busybox-full.config
 	@rm -rf $(dir $($D)) $(local-intermediates-dir)
 	@mkdir -p $(@D)
 	$(hide) ( cat $^ && echo "CONFIG_CROSS_COMPILER_PREFIX=\"$(BUSYBOX_CROSS_COMPILER_PREFIX)\"" ) > $(dir $(@D)).config
-	make -C $(BB_PATH) prepare O=$(abspath $(dir $(@D))) $(BB_PREPARE_FLAGS)
+	make -C $(BB_PATH) prepare O=$(abspath $(dir $(@D)))
 
 include $(BUILD_EXECUTABLE)
 
